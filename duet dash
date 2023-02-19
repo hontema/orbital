@@ -1,0 +1,239 @@
+//import processing.video.*;//for the video to work, go to sketch > import library > add library... > video: GStreamer-based video library for Processing. 
+////the objective of the game is to dodge the blocks, but the black blocks are decoration and you can pass through. 
+////i want to remake this into a full game one day this has a big potential i think even though its based off the kumbius duet.
+//Movie video;//sets up the video
+
+int level = 100;
+
+rect[] r1 = new rect [level];//sets an array of 100, it could be anything.
+//deco[] d1 = new deco [level];
+
+int timeinterval;
+int[] shape = new int[level];//determines the shapes in the array: left, middle, right block or wall.
+float[] plus = new float[level];
+
+int x = 1920;//screen dimensions and center.
+int y = 1080;
+int centerx = x/2;
+int centery = y/2;
+int radius = 45;//for circles
+int revolve = 150;
+
+float angle = 0;
+float xdiff;
+float ydiff;
+float nxdiff;
+float nydiff;
+
+int rectmove = 0;//offset that moves rectangles
+
+int[] spinx = {-120};//i will use for phase 3, havent figured this out yet
+int[] spiny = {-700};//this will add spinning blocks
+int[] spinwidth = {330};
+int[] spinheight = {60};
+float[] spinangle = {0};
+int spinmove = 0;
+float spinrate = .1;
+
+
+void setup() {//sets a black bg, fullscreens without a cursor, starts a timer fills the arrays and plays the video.
+  background(0);
+  fullScreen();
+  noCursor();
+  noStroke();
+  rectMode(CENTER);
+  timer();
+  populate();
+  //populatedeco();
+  //video = new Movie(this, "yt5s.com-Creo - Nautilus-(1080p).mp4");
+  //video.play();
+  //video.volume(0);
+}
+
+void populate() {//fills the shapes array and initializes the rectangles
+  for (int i = 0; i<r1.length; i++) {
+    shape[i] = int(random(0, 8));
+    plus[i] = random(-.02, .02);
+    switch (shape[i]) {//my friend had to teach me this because he said switch function will cut down processing power
+    case 0:
+      r1[i] = new rect(-120, -1000-(400*r1.length)+(400*i), 300, 60, random(0, 2*PI), plus[i], 0);
+      break;
+    case 1:
+      r1[i] = new rect(120, -1000-(400*r1.length)+(400*i), 300, 60, random(0, 2*PI), plus[i], 0);
+      break;
+    case 2:
+      r1[i] = new rect(0, -1000-(400*r1.length)+(400*i), 180, 60, random(0, 2*PI), plus[i], 0);
+      break;
+    case 3:
+      r1[i] = new rect(-105, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+      break;
+    case 4:
+      r1[i] = new rect(105, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+      break;
+    case 5:
+      r1[i] = new rect(0, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+      break;
+    case 6:
+      r1[i] = new rect(0, -1000-(400*r1.length)+(400*i), 60, 180, random(0, 2*PI), plus[i], 0);
+      break;
+    case 7:
+      r1[i] = new rect(0, -1000-(400*r1.length)+(400*i), 60, 300, random(0, 2*PI), plus[i], 0);
+      break;
+    }
+  }
+}
+
+//void populatedeco() {//fills the shapes array and initializes the rectangles
+//  for (int i = 0; i<d1.length; i++) {
+//    shape[i] = int(random(0, 8));
+//    plus[i] = random(-.02, .02);
+//    switch (shape[i]) {//my friend had to teach me this because he said switch function will cut down processing power
+//    case 0:
+//      d1[i] = new deco(-120, -1000-(400*r1.length)+(400*i), 300, 60, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 1:
+//      d1[i] = new deco(120, -1000-(400*r1.length)+(400*i), 300, 60, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 2:
+//      d1[i] = new deco(0, -1000-(400*r1.length)+(400*i), 180, 60, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 3:
+//      d1[i] = new deco(-105, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 4:
+//      d1[i] = new deco(105, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 5:
+//      d1[i] = new deco(0, -1000-(400*r1.length)+(400*i), 150, 120, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 6:
+//      d1[i] = new deco(0, -1000-(400*r1.length)+(400*i), 60, 180, random(0, 2*PI), plus[i], 0);
+//      break;
+//    case 7:
+//      d1[i] = new deco(0, -1000-(400*r1.length)+(400*i), 60, 300, random(0, 2*PI), plus[i], 0);
+//      break;
+//    }
+//  }
+//}
+
+//void movieEvent(Movie video) {//updates frames
+//  video.read();
+//}
+
+//void filter() {//ignore this for now, couldnt get it to work how i wanted it to
+
+//  loadPixels();
+//  for (int i = 0; i < r1.length; i++) {
+//    for (int j = 250; j < 500; j++) {
+//      for (int k = 500; k < 800; k++) {
+//        int loc = j + k * width;
+//        float r = red(video.pixels[loc]);
+//        float g = green(video.pixels[loc]);
+//        float b = blue(video.pixels[loc]);
+//        pixels[loc] = color(b*2, g, r);
+//      }
+//    }
+//  }
+//  updatePixels();
+//}
+
+void draw() { 
+  surface.setTitle("Time taken: " + millis()/1000 + " seconds"); //timer, doesnt do anything rn
+  int currentTime = millis();
+  int elapsedTime = currentTime - timeinterval;
+  if (elapsedTime >= 1000) { 
+    timer();
+  }
+
+  textSize(120);
+  background(0);
+
+  //image(video, 0, 0);//renders video
+  //filter();
+
+  //grid();
+  circles();//draws circles
+  for (int i = 0; i<r1.length; i++) {//renders rectangles and defines hitboxes
+    r1[i].render();
+    r1[i].hitbox();
+  }
+
+
+  //for (int i = 0; i<level; i++) {//renders rectangles 
+  //  d1[i].render();
+  //}
+  //spinner();
+  //spinnerbox();
+  rectmove += 5;//changes offset, moves all rectangles
+}
+
+void timer() {//does nothing right now
+  //fill(random(256), random(256), random(256));
+  //square(250, 250, 250); 
+  timeinterval = millis();
+}
+
+void grid() {//does nothing right now
+  strokeWeight(4);
+  stroke(255);
+  for (int i = 0; i <= height; i = i+60) {
+    line(0, i+30, width, i+30);
+  }
+  for (int i = 0; i <= width; i = i+60) {
+    line(i+30, 0, i+30, height);
+  }
+}
+
+void circles() {//draws circles
+  blendMode(NORMAL);
+  xdiff = mouseX - centerx;//calculates angle based on mouse position
+  ydiff = mouseY - centery;
+
+  nxdiff = centerx - mouseX;
+  nydiff = centery - mouseY;
+  if (mouseX>centerx) {
+    angle = atan(ydiff/xdiff);
+  } else   if (mouseX<centerx) {
+    angle = atan(ydiff/xdiff)+PI;
+  } 
+
+  pushMatrix();//draws the circular track and balls
+  translate(centerx, centery);
+  strokeWeight(4);
+  stroke(255);
+  fill(0, 0, 0, 0);
+  circle (0, 0, 300);
+  //strokeWeight(0);
+  fill(255, 0, 0);
+  circle(revolve*cos(angle), revolve*sin(angle), radius);
+  fill(0, 0, 255);
+  circle(revolve*cos(angle+PI), revolve*sin(angle+PI), radius);
+  fill(255);
+  circle(mouseX-centerx, mouseY-centery, radius);
+  fill(0);
+  //text(angle, 0, 0);
+  popMatrix();
+}
+
+void spinner() {//does nothing for now, its a spinning block
+  for (int i = 0; i<spinx.length; i++) {
+
+    translate(1920/2, 1080/2);
+    pushMatrix();
+    translate (0, spiny[i]+spinmove);
+    rotate(spinangle[i]);
+    fill(0);
+    rect(0, 0, spinwidth[i], spinheight[i]);
+    popMatrix();
+
+    spinmove += 5;
+    spinangle[i] += (PI/36)/2;
+    spinangle[i] = spinangle[i] % (2*PI);
+    //textSize(50);
+    //text(spinangle[i], 200, 0);
+  }
+}
+
+//void spinnerbox(){
+//  if()
+//}
