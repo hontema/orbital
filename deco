@@ -1,0 +1,104 @@
+//class deco extends rect {//initialize variables
+
+
+
+//  deco(int argX, int argY, int argW, int argH, float argT, float argP, float argA) {//constructor for variables
+//    super(argX, argY, argW, argH, argT, argP, argA);
+//    switch(colormode) {//this is how i do the color shifting effect. 
+//    case 0:
+//      this.r = 64;
+//      this.g = colorlevel;
+//      this.b = 0;
+//      break;
+//    case 1:
+//      this.r = abs(64-colorlevel);
+//      this.g = 64;
+//      this.b = 0;
+//      break;
+//    case 2:
+//      this.r = 0;
+//      this.g = 64;
+//      this.b = colorlevel;
+//      break;
+//    case 3:
+//      this.r = 0;
+//      this.g = abs(64-colorlevel);
+//      this.b = 64;
+//      break;
+//    case 4:
+//      this.r = colorlevel;
+//      this.g = 0;
+//      this.b = 64;
+//      break;
+//    case 5:
+//      this.r = 64;
+//      this.g = 0;
+//      this.b = abs(64-colorlevel);
+//    }
+
+//    this.clr = color(this.r, this.g, this.b);
+//  }
+
+//  void render() {//renders the rectangles
+//    blendMode(DIFFERENCE);
+//    strokeWeight(0);
+//    stroke(255);
+//    fill(0);
+//    pushMatrix();
+//    translate(centerx, centery);
+//    rotate(this.recttheta+this.rectthetaspeed);
+//    rectthetaspeed+=rectthetaplus;
+
+//    switch(colormode) {
+//    case 0:
+//      this.r = 64;
+//      this.g = colorlevel;
+//      this.b = 0;
+//      break;
+//    case 1:
+//      this.r = abs(64-colorlevel);
+//      this.g = 64;
+//      this.b = 0;
+//      break;
+//    case 2:
+//      this.r = 0;
+//      this.g = 64;
+//      this.b = colorlevel;
+//      break;
+//    case 3:
+//      this.r = 0;
+//      this.g = abs(64-colorlevel);
+//      this.b = 64;
+//      break;
+//    case 4:
+//      this.r = colorlevel;
+//      this.g = 0;
+//      this.b = 64;
+//      break;
+//    case 5:
+//      this.r = 64;
+//      this.g = 0;
+//      this.b = abs(64-colorlevel);
+//    }
+
+//    this.clr = color(this.r, this.g, this.b, 255);
+
+//    this.colorlevel+=2;
+//    if (this.colorlevel>=64) {
+//      this.colormode++;
+//      this.colorlevel = 0;
+//      if (this.colormode >= 6) {
+//        this.colormode = 0;
+//      }
+//    }
+
+//    fill(this.clr);
+//    rect(this.rectx, this.recty+rectmove, this.rectwidth, this.rectheight);
+//    fill(0, 0, 0, 0);
+//    blendMode(NORMAL);
+//    strokeWeight(4);
+//    stroke(0);
+//    rect(this.rectx, this.recty+rectmove, this.rectwidth, this.rectheight);
+//    popMatrix();
+//  }
+//}
