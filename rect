@@ -1,0 +1,151 @@
+class rect {//initialize variables
+
+  int rectx;
+  int recty;
+
+  int rectwidth;
+  int rectheight;
+  int r;
+  int g;
+  int b;
+
+  int colormode = int(random(0, 6));
+  int colorlevel = int(random(256));
+
+  float recttheta;
+  float rectthetaplus;
+  float rectthetaspeed;
+
+  float rectangle;
+
+  color clr;
+
+  rect(int argX, int argY, int argW, int argH, float argT, float argP, float argA) {//constructor for variables
+    this.rectx = argX;
+    this.recty = argY;
+    this.rectwidth = argW;
+    this.rectheight = argH;
+    this.recttheta = argT;
+    this.rectthetaplus = argP;
+    this.rectangle = argA;
+
+    switch(colormode) {//this is how i do the color shifting effect. 
+    case 0:
+      this.r = 255;
+      this.g = colorlevel;
+      this.b = 0;
+      break;
+    case 1:
+      this.r = abs(255-colorlevel);
+      this.g = 255;
+      this.b = 0;
+      break;
+    case 2:
+      this.r = 0;
+      this.g = 255;
+      this.b = colorlevel;
+      break;
+    case 3:
+      this.r = 0;
+      this.g = abs(255-colorlevel);
+      this.b = 255;
+      break;
+    case 4:
+      this.r = colorlevel;
+      this.g = 0;
+      this.b = 255;
+      break;
+    case 5:
+      this.r = 255;
+      this.g = 0;
+      this.b = abs(255-colorlevel);
+    }
+
+    this.clr = color(this.r, this.g, this.b);
+  }
+
+  void render() {//renders the rectangles
+    blendMode(DIFFERENCE);
+    strokeWeight(0);
+    stroke(255);
+    fill(0);
+    pushMatrix();
+    translate(centerx, centery);
+    rotate(this.recttheta+this.rectthetaspeed);
+    rectthetaspeed+=rectthetaplus;
+
+    switch(colormode) {
+    case 0:
+      this.r = 255;
+      this.g = colorlevel;
+      this.b = 0;
+      break;
+    case 1:
+      this.r = abs(255-colorlevel);
+      this.g = 255;
+      this.b = 0;
+      break;
+    case 2:
+      this.r = 0;
+      this.g = 255;
+      this.b = colorlevel;
+      break;
+    case 3:
+      this.r = 0;
+      this.g = abs(255-colorlevel);
+      this.b = 255;
+      break;
+    case 4:
+      this.r = colorlevel;
+      this.g = 0;
+      this.b = 255;
+      break;
+    case 5:
+      this.r = 255;
+      this.g = 0;
+      this.b = abs(255-colorlevel);
+    }
+
+    this.clr = color(this.r, this.g, this.b, 255);
+
+    this.colorlevel+=2;
+    if (this.colorlevel>=255) {
+      this.colormode++;
+      this.colorlevel = 0;
+      if (this.colormode >= 6) {
+        this.colormode = 0;
+      }
+    }
+
+    fill(this.clr);
+    rect(this.rectx, this.recty+rectmove, this.rectwidth, this.rectheight);
+    fill(0, 0, 0, 0);
+    blendMode(NORMAL);
+    strokeWeight(4);
+    rect(this.rectx, this.recty+rectmove, this.rectwidth, this.rectheight);
+    popMatrix();
+  }
+
+  void hitbox() {//checks if centers of each ball is not in the rectangles.
+
+    if (revolve*cos(angle-recttheta-rectthetaspeed)+centerx>rectx-(rectwidth/2)+centerx&&revolve*cos(angle-recttheta-rectthetaspeed)+centerx<rectx+(rectwidth/2)+centerx&&revolve*sin(angle-recttheta-rectthetaspeed)+centery>recty-(rectheight/2)+rectmove+centery&&revolve*sin(angle-recttheta-rectthetaspeed)+centery<recty+(rectheight/2)+rectmove+centery) {//to put this equation in short, imagine a universe where you control mutiple "yous" and each you is facing a different direction, instead of there being multiple paddles facing different directions
+      text("red collision", 0, 220);
+      println("red collision");
+      rectmove = 0;//"resets" everything
+      spinmove = 0;
+      //rectthetaplus = 0;
+      rectthetaspeed = 0;
+      rectangle = 0;
+      //video.jump(0);
+    } else if (revolve*cos(angle-recttheta+PI-rectthetaspeed)+centerx>rectx-(rectwidth/2)+centerx&&revolve*cos(angle-recttheta+PI-rectthetaspeed)+centerx<rectx+(rectwidth/2)+centerx&&revolve*sin(angle-recttheta+PI-rectthetaspeed)+centery>recty-(rectheight/2)+rectmove+centery&&revolve*sin(angle-recttheta+PI-rectthetaspeed)+centery<recty+(rectheight/2)+rectmove+centery) {
+      text("blue collision", 0, 220);
+      println("blue collision");
+      rectmove = 0;
+      spinmove = 0;
+      //rectthetaplus = 0;
+      rectthetaspeed = 0;
+      rectangle = 0;
+      //video.jump(0);
+    }
+  }
+}
